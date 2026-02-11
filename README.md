@@ -1,4 +1,4 @@
-Welcome to your new TanStack app! 
+Welcome to your new TanStack app!
 
 # Getting Started
 
@@ -17,6 +17,22 @@ To build this application for production:
 npm run build
 ```
 
+## Deploying to Vercel
+
+This project is configured with [Nitro](https://v3.nitro.build/) so it can deploy to Vercel without any extra adapters.
+
+1. Ensure dependencies are installed (Nitro is in `devDependencies`).
+2. Build the app locally to verify:
+
+   ```bash
+   npm run build
+   ```
+
+3. Connect the repository to Vercel and keep the default build command (`npm run build`) and output directory (`.output`).
+4. Deploy via the Vercel dashboard or CLI. Nitro will emit the server bundle Vercel expects under `.output/`.
+
+Refer to the [TanStack Start hosting guide](https://tanstack.com/start/latest/docs/framework/react/guide/hosting) for additional options like custom route rules.
+
 ## Testing
 
 This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
@@ -29,10 +45,8 @@ npm run test
 
 This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
 
-
-
-
 ## Routing
+
 This project uses [TanStack Router](https://tanstack.com/router). The initial setup is a file based router. Which means that the routes are managed as files in `src/routes`.
 
 ### Adding A Route
@@ -68,8 +82,8 @@ In the File Based Routing setup the layout is located in `src/routes/__root.tsx`
 Here is an example layout that includes a header:
 
 ```tsx
-import { Outlet, createRootRoute } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
+import { Outlet, createRootRoute } from "@tanstack/react-router";
+import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
 import { Link } from "@tanstack/react-router";
 
@@ -86,13 +100,12 @@ export const Route = createRootRoute({
       <TanStackRouterDevtools />
     </>
   ),
-})
+});
 ```
 
 The `<TanStackRouterDevtools />` component is not required so you can remove it if you don't want it in your layout.
 
 More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
 
 ## Data Fetching
 
@@ -154,7 +167,7 @@ if (!rootElement.innerHTML) {
   root.render(
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 }
 ```
