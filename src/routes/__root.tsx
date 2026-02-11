@@ -11,6 +11,7 @@ import * as TanstackQueryProvider from "../integrations/tanstack-query/root-prov
 import { HeroUIRouterProvider } from "../integrations/heroui/provider";
 
 import appCss from "../styles.css?url";
+import appLogo from "../assets/images/logo.png?url";
 
 import type { QueryClient } from "@tanstack/react-query";
 
@@ -36,6 +37,11 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       {
         rel: "stylesheet",
         href: appCss,
+      },
+      {
+        rel: "icon",
+        type: "image/png",
+        href: appLogo,
       },
     ],
   }),
