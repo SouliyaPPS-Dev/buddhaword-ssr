@@ -10,20 +10,26 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@heroui/react": "^2.8.8",
+    "@heroui/styles": "^3.0.0-beta.3",
+    "@heroui/system": "^2.4.26",
+    "@heroui/theme": "^2.4.26",
+    "@tailwindcss/vite": "^4.0.6",
     "@tanstack/react-devtools": "^0.7.0",
+    "@tanstack/react-query": "^5.66.5",
+    "@tanstack/react-query-devtools": "^5.84.2",
     "@tanstack/react-router": "^1.132.0",
     "@tanstack/react-router-devtools": "^1.132.0",
     "@tanstack/react-router-ssr-query": "^1.131.7",
     "@tanstack/react-start": "^1.132.0",
     "@tanstack/router-plugin": "^1.132.0",
+    "add": "^2.0.6",
+    "framer-motion": "^12.34.0",
     "lucide-react": "^0.561.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "vite-tsconfig-paths": "^6.0.2",
-    "@tailwindcss/vite": "^4.0.6",
-    "@tanstack/react-query": "^5.66.5",
-    "@tanstack/react-query-devtools": "^5.84.2",
-    "tailwindcss": "^4.0.6"
+    "tailwindcss": "^4.0.6",
+    "vite-tsconfig-paths": "^6.0.2"
   },
   "devDependencies": {
     "@tanstack/devtools-vite": "^0.3.11",

@@ -9,6 +9,8 @@ import { TanStackDevtools } from "@tanstack/react-devtools";
 import Header from "../components/Header";
 
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
+import * as TanstackQueryProvider from "../integrations/tanstack-query/root-provider";
+import { HeroUIRouterProvider } from "../integrations/heroui/provider";
 
 import appCss from "../styles.css?url";
 
@@ -45,14 +47,20 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  const { queryClient } = Route.useRouteContext();
+
   return (
     <html lang="en">
       <head>
         <HeadContent />
       </head>
       <body>
-        <Header />
-        {children}
+        <TanstackQueryProvider.Provider queryClient={queryClient}>
+          <HeroUIRouterProvider>
+            <Header />
+            {children}
+          </HeroUIRouterProvider>
+        </TanstackQueryProvider.Provider>
         <TanStackDevtools
           config={{
             position: "bottom-right",
