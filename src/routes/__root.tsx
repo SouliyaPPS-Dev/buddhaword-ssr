@@ -6,8 +6,6 @@ import {
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 
-import Header from "../components/Header";
-
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import * as TanstackQueryProvider from "../integrations/tanstack-query/root-provider";
 import { HeroUIRouterProvider } from "../integrations/heroui/provider";
@@ -56,10 +54,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <TanstackQueryProvider.Provider queryClient={queryClient}>
-          <HeroUIRouterProvider>
-            <Header />
-            {children}
-          </HeroUIRouterProvider>
+          <HeroUIRouterProvider>{children}</HeroUIRouterProvider>
         </TanstackQueryProvider.Provider>
         <TanStackDevtools
           config={{
