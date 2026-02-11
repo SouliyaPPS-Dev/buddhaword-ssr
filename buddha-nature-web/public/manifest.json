@@ -1,0 +1,26 @@
+{
+  "short_name": "ຄຳສອນພຸດທະ",
+  "name": "ຄຳສອນພຸດທະ",
+  "icons": [
+    {
+      "src": "/buddhaword.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "/buddhaword.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "id": "ຄຳສອນພຣະພຸດທະເຈົ້າ",
+  "scope": "ຄຳສອນພຣະພຸດທະເຈົ້າ",
+  "description": "ຄຳສອນພຣະພຸດທະເຈົ້າ | Buddha Nature",
+  "dir": "auto",
+  "background_color": "#FFAF5D",
+  "theme_color": "#FFAF5D"
+}
