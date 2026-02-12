@@ -1,20 +1,15 @@
-import { useRouter, useRouterState } from '@tanstack/react-router';
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import { router } from '@/router';
+import { useRouterState } from '@tanstack/react-router';
+import { createContext, useContext, useEffect, useState } from 'react';
 
-export type NavigationContextType = {
+type NavigationContextType = {
   history: string[];
   back: () => void;
 };
 
 const NavigationContext = createContext<NavigationContextType | null>(null);
 
+// Key to store history in localStorage
 const HISTORY_STORAGE_KEY = 'navigation_history';
 
 export const NavigationProvider = ({
@@ -22,54 +17,67 @@ export const NavigationProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const router = useRouter();
-  const location = useRouterState({ select: (state) => state.location });
   const [history, setHistory] = useState<string[]>(() => {
-    if (typeof window === 'undefined') {
-      return [];
-    }
-    const saved = window.localStorage.getItem(HISTORY_STORAGE_KEY);
-    return saved ? JSON.parse(saved) : [];
+    // Load initial history from localStorage if available
+    const savedHistory = localStorage.getItem(HISTORY_STORAGE_KEY);
+    return savedHistory ? JSON.parse(savedHistory) : [];
   });
 
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
+  const location = useRouterState({ select: (state) => state.location });
 
+  useEffect(() => {
     const currentPath = location.pathname;
+
     setHistory((prev) => {
-      if (prev.at(-1) === currentPath) return prev;
-      const updated = [...prev, currentPath];
-      window.localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(updated));
-      return updated;
+      const lastPath = prev[prev.length - 1];
+      if (lastPath === currentPath) return prev; // Avoid duplicates
+
+      const updatedHistory = [...prev, currentPath];
+      localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(updatedHistory)); // Persist to localStorage
+      return updatedHistory;
     });
+
+    // Handle back/forward browser navigation
+    const handlePopState = () => {
+      const currentPath = window.location.pathname;
+      setHistory((prev) => {
+        if (prev[prev.length - 1] === currentPath) return prev;
+        const updatedHistory = [...prev, currentPath];
+        localStorage.setItem(
+          HISTORY_STORAGE_KEY,
+          JSON.stringify(updatedHistory)
+        ); // Persist to localStorage
+        return updatedHistory;
+      });
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
   }, [location.pathname]);
 
-  const back = useCallback(() => {
-    setHistory((prev) => {
-      if (prev.length <= 1) {
-        router.navigate({ to: '/' });
-        return ['/'];
-      }
+  const back = () => {
+    if (history.length > 1) {
+      const newHistory = history.slice(0, -1);
+      const previousPath = history[history.length - 2];
 
-      const updated = prev.slice(0, -1);
-      const target = updated.at(-1) ?? '/';
-      router.navigate({ to: target as never });
-      if (typeof window !== 'undefined') {
-        window.localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(updated));
-      }
-      return updated;
-    });
-  }, [router]);
+      setHistory(newHistory);
+      localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(newHistory)); // Update localStorage
 
-  const value = useMemo(
-    () => ({ history, back }),
-    [history, back],
-  );
+      if (previousPath) {
+        router.navigate({ to: previousPath });
+        return;
+      }
+    }
+
+    // Fallback to the root route
+    router.navigate({ to: '/' });
+  };
 
   return (
-    <NavigationContext.Provider value={value}>
+    <NavigationContext.Provider value={{ history, back }}>
       {children}
     </NavigationContext.Provider>
   );
@@ -78,7 +86,7 @@ export const NavigationProvider = ({
 export const useNavigation = () => {
   const context = useContext(NavigationContext);
   if (!context) {
-    throw new Error('useNavigation must be used within NavigationProvider');
+    throw new Error('useNavigation must be used within a NavigationProvider');
   }
   return context;
 };

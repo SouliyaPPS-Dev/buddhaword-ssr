@@ -1,51 +1,42 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, { createContext, useState, ReactNode, useEffect } from 'react';
 
-interface FontSizeContextValue {
+interface FontSizeContextType {
   fontSize: number;
-  increase: () => void;
-  decrease: () => void;
+  setFontSize: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const FontSizeContext = createContext<FontSizeContextValue | null>(null);
-const STORAGE_KEY = 'font-size-preference';
-const MIN_SIZE = 16;
-const MAX_SIZE = 22;
-const DEFAULT_SIZE = 18;
+// Create a context with default values
+const FontSizeContext = createContext<FontSizeContextType | undefined>(
+  undefined
+);
 
-export const FontSizeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [fontSize, setFontSize] = useState(() => {
-    if (typeof window === 'undefined') {
-      return DEFAULT_SIZE;
-    }
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    return stored ? Number(stored) : DEFAULT_SIZE;
-  });
+interface FontSizeProviderProps {
+  children: ReactNode;
+}
 
+export const FontSizeProvider: React.FC<FontSizeProviderProps> = ({
+  children,
+}) => {
+  // Load the font size from localStorage or default to 18 if not found
+  const storedFontSize = localStorage.getItem('fontSize');
+  const initialFontSize = storedFontSize ? parseInt(storedFontSize, 10) : 18;
+
+  const [fontSize, setFontSize] = useState(initialFontSize);
+
+  // Update localStorage whenever fontSize changes
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    window.localStorage.setItem(STORAGE_KEY, String(fontSize));
+    localStorage.setItem('fontSize', fontSize.toString());
   }, [fontSize]);
 
-  const value = useMemo<FontSizeContextValue>(
-    () => ({
-      fontSize,
-      increase: () => setFontSize((size) => Math.min(size + 1, MAX_SIZE)),
-      decrease: () => setFontSize((size) => Math.max(size - 1, MIN_SIZE)),
-    }),
-    [fontSize],
+  return (
+    <FontSizeContext.Provider value={{ fontSize, setFontSize }}>
+      {children}
+    </FontSizeContext.Provider>
   );
-
-  return <FontSizeContext.Provider value={value}>{children}</FontSizeContext.Provider>;
 };
 
-export const useFontSize = () => {
-  const context = useContext(FontSizeContext);
+export const useFontSizeContext = (): FontSizeContextType => {
+  const context = React.useContext(FontSizeContext);
   if (!context) {
     throw new Error('useFontSize must be used within a FontSizeProvider');
   }

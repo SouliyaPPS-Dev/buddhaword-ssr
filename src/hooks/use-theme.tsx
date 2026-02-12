@@ -1,4 +1,4 @@
-import {
+import React, {
   createContext,
   useContext,
   useEffect,
@@ -6,14 +6,16 @@ import {
   useState,
 } from 'react';
 
+// Theme constants
 const ThemeProps = {
   key: 'theme',
   light: 'light',
   dark: 'dark',
 } as const;
 
-type Theme = (typeof ThemeProps)[keyof typeof ThemeProps];
+type Theme = typeof ThemeProps.light | typeof ThemeProps.dark;
 
+// Define the context type
 interface ThemeContextType {
   theme: Theme;
   isDark: boolean;
@@ -23,13 +25,14 @@ interface ThemeContextType {
   toggleTheme: () => void;
 }
 
+// Create the context
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
+// ThemeProvider Component
+export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof window === 'undefined') {
-      return ThemeProps.light;
-    }
     const storedTheme = localStorage.getItem(ThemeProps.key) as Theme | null;
     return storedTheme || ThemeProps.light;
   });
@@ -37,35 +40,42 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const isDark = useMemo(() => theme === ThemeProps.dark, [theme]);
   const isLight = useMemo(() => theme === ThemeProps.light, [theme]);
 
-  const applyTheme = (nextTheme: Theme) => {
-    if (typeof document !== 'undefined') {
-      document.documentElement.classList.remove(ThemeProps.light, ThemeProps.dark);
-      document.documentElement.classList.add(nextTheme);
-    }
-    localStorage.setItem(ThemeProps.key, nextTheme);
-    setTheme(nextTheme);
+  const _setTheme = (theme: Theme) => {
+    localStorage.setItem(ThemeProps.key, theme);
+    document.documentElement.classList.remove(
+      ThemeProps.light,
+      ThemeProps.dark
+    );
+    document.documentElement.classList.add(theme);
+    setTheme(theme);
   };
 
-  const setLightTheme = () => applyTheme(ThemeProps.light);
-  const setDarkTheme = () => applyTheme(ThemeProps.dark);
-  const toggleTheme = () => applyTheme(isDark ? ThemeProps.light : ThemeProps.dark);
+  const setLightTheme = () => _setTheme(ThemeProps.light);
+  const setDarkTheme = () => _setTheme(ThemeProps.dark);
+  const toggleTheme = () =>
+    theme === ThemeProps.dark ? setLightTheme() : setDarkTheme();
 
   useEffect(() => {
-    if (typeof document !== 'undefined') {
-      applyTheme(theme);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    _setTheme(theme);
+  }, [theme]);
 
   return (
     <ThemeContext.Provider
-      value={{ theme, isDark, isLight, setLightTheme, setDarkTheme, toggleTheme }}
+      value={{
+        theme,
+        isDark,
+        isLight,
+        setLightTheme,
+        setDarkTheme,
+        toggleTheme,
+      }}
     >
       {children}
     </ThemeContext.Provider>
   );
 };
 
+// Custom hook to use ThemeContext
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {

@@ -1,31 +1,40 @@
 import * as React from 'react';
 
-import about from '@/assets/icons/about.png';
 import book from '@/assets/icons/book.png';
 import calendar from '@/assets/icons/calendar.png';
-import dhamma from '@/assets/icons/dhamma.png';
-import favorites from '@/assets/icons/favorites.png';
 import home from '@/assets/icons/home.png';
 import sutra from '@/assets/icons/sutra.png';
+import favorites from '@/assets/icons/favorites.png';
 import video from '@/assets/icons/vdo.png';
-import type { IconSvgProps, LogoProps } from '@/model';
+import dhamma from '@/assets/icons/dhamma.png';
+import about from '@/assets/icons/about.png';
+// import logo from '@/assets/images/logo.png';
+import { IconSvgProps, LogoProps } from '@/model';
+import { router } from '@/router';
 
 export const Logo: React.FC<LogoProps> = ({
   width = 36,
   height,
   alt = 'Logo',
   ...props
-}) => (
-  <img
-    src={'/logo_wutdarn.png'}
-    alt={alt}
-    width={width}
-    height={height ?? width}
-    {...props}
-  />
-);
+}) => {
+  return (
+    <img
+      src={'/logo_wutdarn.png'}
+      alt={alt}
+      width={width}
+      height={height || width} // Default height equals the width if not provided
+      {...props}
+    />
+  );
+};
 
-export const MoonFilledIcon = ({ size = 24, width, height, ...props }: IconSvgProps) => (
+export const MoonFilledIcon = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}: IconSvgProps) => (
   <svg
     aria-hidden='true'
     focusable='false'
@@ -42,7 +51,12 @@ export const MoonFilledIcon = ({ size = 24, width, height, ...props }: IconSvgPr
   </svg>
 );
 
-export const SunFilledIcon = ({ size = 24, width, height, ...props }: IconSvgProps) => (
+export const SunFilledIcon = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}: IconSvgProps) => (
   <svg
     aria-hidden='true'
     focusable='false'
@@ -59,16 +73,148 @@ export const SunFilledIcon = ({ size = 24, width, height, ...props }: IconSvgPro
   </svg>
 );
 
-const iconFactory = (src: string, alt: string) =>
-  function Icon(props: React.ImgHTMLAttributes<HTMLImageElement>) {
-    return <img {...props} src={src} alt={alt} className='w-6 h-6 mx-auto' />;
-  };
+export const HeartFilledIcon = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}: IconSvgProps) => (
+  <svg
+    aria-hidden='true'
+    focusable='false'
+    height={size || height}
+    role='presentation'
+    viewBox='0 0 24 24'
+    width={size || width}
+    {...props}
+  >
+    <path
+      d='M12.62 20.81c-.34.12-.9.12-1.24 0C8.48 19.82 2 15.69 2 8.69 2 5.6 4.49 3.1 7.56 3.1c1.82 0 3.43.88 4.44 2.24a5.53 5.53 0 0 1 4.44-2.24C19.51 3.1 22 5.6 22 8.69c0 7-6.48 11.13-9.38 12.12Z'
+      fill='currentColor'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+      strokeWidth={1.5}
+    />
+  </svg>
+);
 
-export const HomeIcon = iconFactory(home, 'Home');
-export const SutraIcon = iconFactory(sutra, 'Sutra');
-export const VideoIcon = iconFactory(video, 'Video');
-export const DhammaIcon = iconFactory(dhamma, 'Dhamma');
-export const AboutIcon = iconFactory(about, 'About');
-export const FavoritesIcon = iconFactory(favorites, 'Favorites');
-export const CalendarIcon = iconFactory(calendar, 'Calendar');
-export const BookIcon = iconFactory(book, 'Book');
+export const SearchIcon = (props: IconSvgProps) => (
+  <div
+    className='w-6 h-6 text-white dark:text-gray-300 mt-2 cursor-pointer'
+    onClick={() => router.navigate({ to: `/sutra/search${window.location.search}` })}
+  >
+    <svg
+      aria-hidden='true'
+      fill='none'
+      focusable='false'
+      height='1em'
+      role='presentation'
+      viewBox='0 0 24 24'
+      width='1em'
+      {...props}
+    >
+      <path
+        d='M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z'
+        stroke='currentColor'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        strokeWidth='2'
+      />
+      <path
+        d='M22 22L20 20'
+        stroke='currentColor'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        strokeWidth='2'
+      />
+    </svg>
+  </div>
+);
+
+// Home Icon
+export const HomeIcon: React.FC<React.ImgHTMLAttributes<HTMLImageElement>> = (
+  props
+) => (
+  <img
+    {...props}
+    src={home}
+    alt='Home'
+    className='w-6 h-6 mx-auto' // Consistent size for all icons
+  />
+);
+
+// Sutra Icon
+export const SutraIcon: React.FC<React.ImgHTMLAttributes<HTMLImageElement>> = (
+  props
+) => (
+  <img
+    {...props}
+    src={sutra}
+    alt='Sutra'
+    className='w-6 h-6 mx-auto' // Consistent size for Sutra icon
+  />
+);
+
+// Sutra Icon
+export const VideoIcon: React.FC<React.ImgHTMLAttributes<HTMLImageElement>> = (
+  props
+) => (
+  <img
+    {...props}
+    src={video}
+    alt='Video'
+    className='w-6 h-6 mx-auto' // Consistent size for Sutra icon
+  />
+);
+
+export const DhammaIcon: React.FC<React.ImgHTMLAttributes<HTMLImageElement>> = (
+  props
+) => (
+  <img
+    {...props}
+    src={dhamma}
+    alt='Dhamma'
+    className='w-6 h-6 mx-auto' // Consistent size for Sutra icon
+  />
+);
+
+export const AboutIcon: React.FC<React.ImgHTMLAttributes<HTMLImageElement>> = (
+  props
+) => (
+  <img
+    {...props}
+    src={about}
+    alt='About'
+    className='w-6 h-6 mx-auto' // Consistent size for Sutra icon
+  />
+);
+
+export const FavoritesIcon: React.FC<
+  React.ImgHTMLAttributes<HTMLImageElement>
+> = (props) => (
+  <img
+    {...props}
+    src={favorites}
+    alt='Favorites'
+    className='w-6 h-6 mx-auto' // Consistent size for Sutra icon
+  />
+);
+
+// Calendar Icon
+export const CalendarIcon: React.FC<
+  React.ImgHTMLAttributes<HTMLImageElement>
+> = (props) => (
+  <img {...props} src={calendar} alt='Calendar' className='w-6 h-6 mx-auto' />
+);
+
+// Book Icon
+export const BookIcon: React.FC<React.ImgHTMLAttributes<HTMLImageElement>> = (
+  props
+) => (
+  <img
+    {...props}
+    src={book}
+    alt='Book'
+    className='w-6 h-6 mx-auto' // Consistent size for Book icon
+  />
+);

@@ -1,15 +1,17 @@
-import { createContext, useContext, useState } from 'react';
+/* eslint-disable react-refresh/only-export-components */
+import React, { createContext, useContext, useState } from 'react';
 
-interface MenuContextValue {
+interface MenuContextType {
   isMenuOpen: boolean;
-  setIsMenuOpen: (value: boolean) => void;
+  setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const MenuContext = createContext<MenuContextValue | null>(null);
+const MenuContext = createContext<MenuContextType | undefined>(undefined);
 
-export const MenuProvider = ({ children }: { children: React.ReactNode }) => {
+export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   return (
     <MenuContext.Provider value={{ isMenuOpen, setIsMenuOpen }}>
       {children}
@@ -17,10 +19,10 @@ export const MenuProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export const useMenuContext = () => {
+export const useMenuContext = (): MenuContextType => {
   const context = useContext(MenuContext);
   if (!context) {
-    throw new Error('useMenuContext must be used within MenuProvider');
+    throw new Error('useMenu must be used within a MenuProvider');
   }
   return context;
 };
