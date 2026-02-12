@@ -9,18 +9,19 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SutraRouteImport } from './routes/sutra'
-import { Route as FavoritesRouteImport } from './routes/favorites'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SutraIndexRouteImport } from './routes/sutra/index'
 
-const SutraRoute = SutraRouteImport.update({
-  id: '/sutra',
-  path: '/sutra',
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
-const FavoritesRoute = FavoritesRouteImport.update({
-  id: '/favorites',
-  path: '/favorites',
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -28,51 +29,60 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SutraIndexRoute = SutraIndexRouteImport.update({
+  id: '/sutra/',
+  path: '/sutra/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/favorites': typeof FavoritesRoute
-  '/sutra': typeof SutraRoute
+  '/about': typeof AboutRoute
+  '/privacy': typeof PrivacyRoute
+  '/sutra/': typeof SutraIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/favorites': typeof FavoritesRoute
-  '/sutra': typeof SutraRoute
+  '/about': typeof AboutRoute
+  '/privacy': typeof PrivacyRoute
+  '/sutra': typeof SutraIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/favorites': typeof FavoritesRoute
-  '/sutra': typeof SutraRoute
+  '/about': typeof AboutRoute
+  '/privacy': typeof PrivacyRoute
+  '/sutra/': typeof SutraIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/favorites' | '/sutra'
+  fullPaths: '/' | '/about' | '/privacy' | '/sutra/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/favorites' | '/sutra'
-  id: '__root__' | '/' | '/favorites' | '/sutra'
+  to: '/' | '/about' | '/privacy' | '/sutra'
+  id: '__root__' | '/' | '/about' | '/privacy' | '/sutra/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  FavoritesRoute: typeof FavoritesRoute
-  SutraRoute: typeof SutraRoute
+  AboutRoute: typeof AboutRoute
+  PrivacyRoute: typeof PrivacyRoute
+  SutraIndexRoute: typeof SutraIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/sutra': {
-      id: '/sutra'
-      path: '/sutra'
-      fullPath: '/sutra'
-      preLoaderRoute: typeof SutraRouteImport
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/favorites': {
-      id: '/favorites'
-      path: '/favorites'
-      fullPath: '/favorites'
-      preLoaderRoute: typeof FavoritesRouteImport
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -82,13 +92,21 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sutra/': {
+      id: '/sutra/'
+      path: '/sutra'
+      fullPath: '/sutra/'
+      preLoaderRoute: typeof SutraIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  FavoritesRoute: FavoritesRoute,
-  SutraRoute: SutraRoute,
+  AboutRoute: AboutRoute,
+  PrivacyRoute: PrivacyRoute,
+  SutraIndexRoute: SutraIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
